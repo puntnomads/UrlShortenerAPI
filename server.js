@@ -2,16 +2,26 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 var base58 = require('./base58.js');
-
 var Url = require('./url');
 
-var url = process.env.MONGOLAB_URI;
+var url = 'mongodb://localhost:27017/url_shortener';
 mongoose.Promise = global.Promise;
 mongoose.connect(url);
-var db = mongoose.connection;
-if(db.getCollection('counter').exists()===null){
-    db.collection('counter').insert({ _id: 'url_count', seq: 1 });
-};
+var dbase = mongoose.connection;
+dbase.on('open', function () {
+    dbase.db.listCollections().toArray(function (err, names) {
+        if (err){ console.log(err); };
+        var exists = false;
+        names.forEach(function(entry) {
+            if(entry.name==="counter"){
+                exists = true;
+            };
+        });
+        if(exists===false){
+          dbase.collection('counter').insert({ _id: 'url_count', seq: 1 });  
+        };
+    });
+});
 
 app.get('/', function (req, res) {
   res.send('Hello World!')
