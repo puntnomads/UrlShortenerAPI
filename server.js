@@ -8,7 +8,10 @@ var Url = require('./url');
 var url = process.env.MONGOLAB_URI;
 mongoose.Promise = global.Promise;
 mongoose.connect(url);
-mongoose.connection.collection('counter').insert({ _id: 'url_count', seq: 1 });
+var db = mongoose.connection;
+if(db.getCollection('counter').exists()===null){
+    db.collection('counter').insert({ _id: 'url_count', seq: 1 });
+};
 
 app.get('/', function (req, res) {
   res.send('Hello World!')
