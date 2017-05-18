@@ -5,7 +5,7 @@ var request = require('request');
 var base58 = require('./base58.js');
 var Url = require('./url');
 
-var url = 'mongodb://localhost:27017/url_shortener';
+var url = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/url_shortener';
 mongoose.Promise = global.Promise;
 mongoose.connect(url);
 var dbase = mongoose.connection;
