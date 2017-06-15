@@ -1,9 +1,18 @@
 var express = require('express');
+var path = require('path');
 var app = express();
 var mongoose = require('mongoose');
 var request = require('request');
 var base58 = require('./base58.js');
 var Url = require('./url');
+
+app.set('view engine', 'ejs');
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', function (req, res) {
+  res.render('index');
+})
 
 var url = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/url_shortener';
 mongoose.Promise = global.Promise;
@@ -22,10 +31,6 @@ dbase.on('open', function () {
           dbase.collection('counter').insert({ _id: 'url_count', seq: 1 });  
         }
     });
-});
-
-app.get('/', function (req, res) {
-  res.send('Hello World!');
 });
 
 app.get('/new/*', function(req, res){

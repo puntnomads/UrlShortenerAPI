@@ -1,0 +1,1 @@
+This API converts a url parameter into a shortened url. Shortened url will redirect to the original link.
